@@ -1,0 +1,29 @@
+body {
+  margin: 0;
+}
+
+.debug {
+  color: white;
+  background-color: royalblue;
+  position: absolute;
+}
+
+.wallpaper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-size: contain;
+  background-position: center;
+  z-index: -1;
+}
+
+.fade-in {
+  animation: fade 500ms linear;
+}
+
+@keyframes fade {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
