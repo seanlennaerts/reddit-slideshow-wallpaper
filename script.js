@@ -58,12 +58,13 @@ const updateSubreddit = debounce(async (sub) => {
 
 async function getImages(sub) {
   let images = [];
-  const data = await get(`https://www.reddit.com/${sub}.json`);
-  console.log(data.data.children.length);
+  const data = await get(`https://www.reddit.com/${sub}/top.json?t=all&limit=100`);
   for (let listing of data.data.children) {
-    const { post_hint, url } = listing.data;
+    const { post_hint, url, preview } = listing.data;
     switch (post_hint) {
       case 'image':
+        // preview.images[0].source.width
+        // preview.images[0].source.height
         images.push(url);
         break;
       default:
@@ -74,7 +75,6 @@ async function getImages(sub) {
 }
 
 function changeImage(after) {
-  console.log(after);
   const afterElem = document.querySelector('#after');
   const beforeElem = document.querySelector('#before');
 
@@ -94,13 +94,16 @@ function startSlideshow(images) {
   console.log('clearing timeout and starting new slideshow');
   clearTimeout(timeout);
   const loop = (index) => {
+    console.log(`showing ${index + 1} of ${images.length}`);
     changeImage(images[index]);
-    timeout = setTimeout(() => loop(index + 1), 1000 * 10);
+    timeout = setTimeout(() => loop(mod(index + 1, images.length)), 1000 * 10);
   }
   loop(0);
 }
 
 // utils
+const mod = (n, m) => ((n % m) + m) % m; // wrap arround modulo
+
 function debounce(callback, wait) {
   let timeout;
   return (...args) => {
