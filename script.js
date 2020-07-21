@@ -1,3 +1,4 @@
+// state
 var timeout;
 
 window.wallpaperPropertyListener = {
@@ -6,27 +7,51 @@ window.wallpaperPropertyListener = {
       updateSubreddit(properties.subreddit_or_user.value);
     }
     if (properties.fill) {
-
+      updateFill(properties.fill.value);
+    }
+    if (properties.tile) {
+      changeBackgroundStyle('backgroundRepeat', properties.tile.value ? 'repeat' : 'no-repeat');
     }
     if (properties.background_color) {
-
+      const rgb = properties.background_color.value.split(' ').map(value => value * 255);
+      changeBackgroundStyle('backgroundColor', `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`);
     }
     if (properties.change_picture_every) {
-
-    }
-    if (properties.click_to_change_picture) {
-
+      // value in seconds
     }
   },
   setPaused: pauseStatus => {
     if (!pauseStatus) { // unpaused
+      console.log('came back from being suspended');
     }
   }
 }
 
+function changeBackgroundStyle(property, value) {
+  const elems = document.querySelectorAll('.wallpaper');
+  for (const e of elems) {
+    e.style[property] = value;
+  }
+}
+
+function updateFill(fill) {
+  switch (fill) {
+    case 'smart':
+      // if portrait contain
+      // if landscape cover
+      break;
+    case 'cover':
+      changeBackgroundStyle('backgroundSize', 'cover');
+      break;
+    case 'fit':
+      changeBackgroundStyle('backgroundSize', 'contain');
+      break;
+    default:
+    //
+  }
+}
+
 const updateSubreddit = debounce(async (sub) => {
-  console.log(sub);
-  clearTimeout(timeout);
   startSlideshow(await getImages(sub));
 }, 5000);
 
@@ -48,8 +73,6 @@ async function getImages(sub) {
   return images;
 }
 
-// document.addEventListener('click', () => nextImage());
-
 function changeImage(after) {
   console.log(after);
   const afterElem = document.querySelector('#after');
@@ -57,24 +80,24 @@ function changeImage(after) {
 
   beforeElem.style.backgroundImage = afterElem.style.backgroundImage;
 
-  let preloadImage = document.createElement('img');
-  preloadImage.src = after;
-
+  const preloadImage = document.createElement('img');
   preloadImage.onload = () => {
     const clone = afterElem.cloneNode();
     clone.style.backgroundImage = `url(${after})`;
     clone.classList.add('fade-in');
     afterElem.parentNode.replaceChild(clone, afterElem);
-    preloadImage = null;
   }
+  preloadImage.src = after;
 }
 
 function startSlideshow(images) {
-  const loop = (index = 0) => {
+  console.log('clearing timeout and starting new slideshow');
+  clearTimeout(timeout);
+  const loop = (index) => {
     changeImage(images[index]);
-    timeout = setTimeout(() => loop(index + 1), 60 * 1000 * 1);
+    timeout = setTimeout(() => loop(index + 1), 1000 * 10);
   }
-  loop();
+  loop(0);
 }
 
 // utils
@@ -104,5 +127,4 @@ async function get(api, n = 10, wait = 1000) {
     }, wait)
   }
 }
-
 //end utils
