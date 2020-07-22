@@ -44,3 +44,15 @@ export function changeImage(image) {
   }
   preloadImage.src = image;
 }
+
+export function showNotification(error, persist = false) {
+  const debugElem = document.querySelector('.debug');
+  const logElem = document.createElement('p');
+  logElem.innerText = error;
+  debugElem.appendChild(logElem);
+  if (!persist) {
+    setTimeout(() => {
+      debugElem.innerHTML = '';
+    }, 5000);
+  }
+}

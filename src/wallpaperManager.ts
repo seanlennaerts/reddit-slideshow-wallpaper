@@ -1,6 +1,6 @@
 import { Wallpaper } from './wallpaper';
 import { RedditAPI } from './redditAPI';
-import { changeImage } from './domController';
+import { changeImage, showNotification } from './domController';
 import { mod } from './utils';
 
 class WallpaperManager {
@@ -42,6 +42,7 @@ class WallpaperManager {
 
   updateSubreddit(subreddit: string) {
     console.log('updating subreddit');
+    showNotification(`Fetching from ${this.subreddit}`);
     this.subreddit = subreddit;
     this.restart();
   }
