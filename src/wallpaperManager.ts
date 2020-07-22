@@ -26,7 +26,6 @@ class WallpaperManager {
 
   private async restart() {
     if (this.subreddit && this.filter) {
-      console.log('restarting');
       clearTimeout(this.timeoutStart);
       this.index = 0;
 
@@ -42,13 +41,11 @@ class WallpaperManager {
   }
 
   updateSubreddit(subreddit: string) {
-    console.log('updating subreddit');
     this.subreddit = subreddit;
     this.restart();
   }
 
   updateFilter(filter: string) {
-    console.log('updating filter');
     this.filter = filter;
     this.restart();
   }
@@ -57,10 +54,11 @@ class WallpaperManager {
     if (this.wallpapers) {
       clearTimeout(this.timeout);
       const loop = async () => {
-        console.log(`showing ${this.index + 1} of ${this.wallpapers.length}`);
         if ((this.wallpapers.length - this.index) < 5) {
+          console.log('getting new images');
           this.wallpapers = [...this.wallpapers, ... await this.redditAPI.getImages()];
         }
+        console.log(`showing ${this.index + 1} of ${this.wallpapers.length}`);
         changeImage(this.wallpapers[this.index].url);
         this.timeoutStart = Date.now();
         this.timeout = setTimeout(() => loop(), 1000 * this.delay);
@@ -82,7 +80,7 @@ class WallpaperManager {
     } else {
       console.log('resuming');
       const timeRemaining = Math.max(2000, this.delay * 1000 - Date.now() + this.timeoutStart);
-      console.log(timeRemaining);
+      console.log({ timeRemaining });
       this.timeout = setTimeout(() => this.startSlideshow(), timeRemaining);
     }
   }
