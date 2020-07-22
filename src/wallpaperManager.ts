@@ -34,6 +34,7 @@ class WallpaperManager {
         this.redditAPI.cancel();
       }
 
+      showNotification(`Fetching from ${this.subreddit}`);
       this.redditAPI = new RedditAPI(this.subreddit, this.filter);
       this.wallpapers = await this.redditAPI.getImages();
       this.startSlideshow();
@@ -42,7 +43,6 @@ class WallpaperManager {
 
   updateSubreddit(subreddit: string) {
     console.log('updating subreddit');
-    showNotification(`Fetching from ${this.subreddit}`);
     this.subreddit = subreddit;
     this.restart();
   }

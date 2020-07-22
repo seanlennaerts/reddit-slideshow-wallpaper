@@ -12,7 +12,7 @@ declare global {
 
 const updateSubreddit = debounce((subreddit: string) => {
   wallpaperManager.updateSubreddit(subreddit);
-}, 5000);
+}, 3000);
 
 window.wallpaperPropertyListener = {
   applyUserProperties: (properties: any) => {
