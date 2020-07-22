@@ -1,3 +1,4 @@
+// basic debounce
 export function debounce(callback: Function, wait: number) {
   let timeout: number;
   return (...args: any) => {
@@ -8,7 +9,7 @@ export function debounce(callback: Function, wait: number) {
 }
 
 // wrapper for fetch to retry n times with incrementing delays
-// throws Error if n = 1
+// throws Error if n = 0
 export async function get(url: string, signal: AbortSignal, n = 4, wait = 1000,) {
   try {
     const response = await fetch(url, { signal });
@@ -17,7 +18,11 @@ export async function get(url: string, signal: AbortSignal, n = 4, wait = 1000,)
     }
     return response.json();
   } catch (e) {
-    if (n === 1) {
+    if (e.name === 'AbortError') {
+      console.log('aborted fetch');
+      return;
+    }
+    if (n === 0) {
       const error = new Error(`Failed to GET from ${url}`);
       error.name = 'NetworkError';
       throw error;
@@ -26,4 +31,9 @@ export async function get(url: string, signal: AbortSignal, n = 4, wait = 1000,)
       return await get(url, signal, n - 1, wait * 2,);
     }, wait)
   }
+}
+
+// wrap around modulo
+export function mod(n: number, m: number) {
+  return ((n % m) + m) % m;
 }

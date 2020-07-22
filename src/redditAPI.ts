@@ -24,7 +24,12 @@ class RedditAPI {
         switch (post_hint) {
           case 'image':
             const { height, width } = preview.images[0].source;
-            wallpapers.push(new Wallpaper(url, height, width, Type.Image));
+            wallpapers.push({
+              url,
+              height,
+              width,
+              type: Type.Image,
+            });
             break;
           default:
           //
@@ -32,10 +37,7 @@ class RedditAPI {
       }
       return wallpapers;
     } catch (e) {
-      if (e.name === 'AbortError') {
-        console.log('fetch was aborted');
-        // fail silently
-      }
+      // fail silently
     }
   }
 }

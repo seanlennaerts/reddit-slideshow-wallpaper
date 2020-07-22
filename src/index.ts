@@ -1,4 +1,5 @@
 import { WallpaperManager } from './wallpaperManager';
+import { updateFill, updateBackgroundColor, updateTile } from './domController';
 import { debounce } from './utils';
 
 const wallpaperManager = WallpaperManager.getInstance();
@@ -8,31 +9,31 @@ declare global {
     wallpaperPropertyListener: any;
   }
 }
+
+const updateSubreddit = debounce((subreddit: string) => {
+  wallpaperManager.updateSubreddit(subreddit);
+}, 5000);
+
 window.wallpaperPropertyListener = {
   applyUserProperties: (properties: any) => {
     if (properties.subreddit_or_user) {
-      (debounce((subreddit: string) => {
-        wallpaperManager.updateSubreddit(subreddit);
-      }, 5000))(properties.subreddit_or_user.value);
+      updateSubreddit(properties.subreddit_or_user.value);
     }
     if (properties.fill) {
-      // updateFill(properties.fill.value);
+      updateFill(properties.fill.value);
     }
     if (properties.tile) {
-      // changeBackgroundStyle('backgroundRepeat', properties.tile.value ? 'repeat' : 'no-repeat');
+      updateTile(properties.tile.value);
     }
     if (properties.background_color) {
-      const rgb: number[] = properties.background_color.value.split(' ').map((value: number) => value * 255);
-      // changeBackgroundStyle('backgroundColor', `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`);
+      updateBackgroundColor(properties.background_color.value);
     }
     if (properties.change_picture_every) {
-      // value in seconds
+      wallpaperManager.setDelay(properties.change_picture_every.value);
     }
   },
   setPaused: (pauseStatus: any) => {
-    if (!pauseStatus) { // unpaused
-      console.log('came back from being suspended');
-    }
+    //
   }
 }
 
