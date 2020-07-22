@@ -33,6 +33,7 @@ window.wallpaperPropertyListener = {
     }
   },
   setPaused: (pauseStatus: any) => {
+    wallpaperManager.pause(pauseStatus);
     //
   }
 }

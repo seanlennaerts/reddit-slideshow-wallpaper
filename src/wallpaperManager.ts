@@ -10,6 +10,7 @@ class WallpaperManager {
   private timeout: number;
   private delay: number; // in seconds
   private index: number = 0;
+  private timeoutStart: number;
 
   private constructor() { }
 
@@ -37,6 +38,7 @@ class WallpaperManager {
       const loop = () => {
         console.log(`showing ${this.index + 1} of ${this.wallpapers.length}`);
         changeImage(this.wallpapers[this.index].url);
+        this.timeoutStart = Date.now();
         this.timeout = setTimeout(() => loop(), 1000 * this.delay);
         this.index = mod(this.index + 1, this.wallpapers.length);
       }
@@ -47,6 +49,18 @@ class WallpaperManager {
   public setDelay(delay: number) {
     this.delay = delay;
     this.startSlideshow();
+  }
+
+  public pause(pauseStatus: boolean) {
+    if (pauseStatus) {
+      console.log('pausing');
+      clearTimeout(this.timeout);
+    } else {
+      console.log('resuming');
+      const timeRemaining = Math.max(5000, this.delay * 1000 - Date.now() + this.timeoutStart);
+      console.log(timeRemaining);
+      setTimeout(() => this.startSlideshow(), timeRemaining);
+    }
   }
 }
 
