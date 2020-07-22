@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "target": "es6",
+    "module": "AMD",
+    "outFile": "script.js"
+  },
+  "include": [
+    "src/*.ts"
+  ]
+}
