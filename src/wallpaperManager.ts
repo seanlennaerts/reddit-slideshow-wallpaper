@@ -6,6 +6,8 @@ import { mod } from './utils';
 class WallpaperManager {
   private static instance: WallpaperManager;
   private redditAPI: RedditAPI;
+  private subreddit: string;
+  private filter: string;
   private wallpapers: Wallpaper[];
   private timeout: number;
   private delay: number; // in seconds
@@ -22,14 +24,27 @@ class WallpaperManager {
     return WallpaperManager.instance;
   }
 
-  async updateSubreddit(subreddit: string) {
-    if (this.redditAPI) {
-      this.redditAPI.cancel();
+  private async restart() {
+    if (this.subreddit) {
+      if (this.redditAPI) {
+        console.log('cancelling redditAPI');
+        this.redditAPI.cancel();
+      }
+      this.index = 0;
+      this.redditAPI = new RedditAPI(this.subreddit, this.filter);
+      this.wallpapers = await this.redditAPI.getImages();
+      this.startSlideshow();
     }
-    this.redditAPI = new RedditAPI(subreddit);
-    this.wallpapers = await this.redditAPI.getImages();
-    this.index = 0;
-    this.startSlideshow();
+  }
+
+  updateSubreddit(subreddit: string) {
+    this.subreddit = subreddit;
+    this.restart();
+  }
+
+  updateFilter(filter: string) {
+    this.filter = filter;
+    this.restart();
   }
 
   private startSlideshow() {
@@ -57,7 +72,7 @@ class WallpaperManager {
       clearTimeout(this.timeout);
     } else {
       console.log('resuming');
-      const timeRemaining = Math.max(5000, this.delay * 1000 - Date.now() + this.timeoutStart);
+      const timeRemaining = Math.max(2000, this.delay * 1000 - Date.now() + this.timeoutStart);
       console.log(timeRemaining);
       setTimeout(() => this.startSlideshow(), timeRemaining);
     }

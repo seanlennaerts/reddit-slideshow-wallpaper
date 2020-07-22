@@ -38,7 +38,7 @@ export function changeImage(image) {
   preloadImage.onload = () => {
     const clone = afterElem.cloneNode();
     clone.style.backgroundImage = `url(${image})`;
-    clone.style.animationPlayState = 'running';
+    // clone.style.animationPlayState = 'running';
     clone.classList.add('fade-in');
     afterElem.parentNode.replaceChild(clone, afterElem);
   }

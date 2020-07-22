@@ -31,6 +31,9 @@ window.wallpaperPropertyListener = {
     if (properties.change_picture_every) {
       wallpaperManager.setDelay(properties.change_picture_every.value);
     }
+    if (properties.filter) {
+      wallpaperManager.updateFilter(properties.filter.value);
+    }
   },
   setPaused: (pauseStatus: any) => {
     wallpaperManager.pause(pauseStatus);
