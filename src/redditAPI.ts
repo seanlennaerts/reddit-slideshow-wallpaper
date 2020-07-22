@@ -17,7 +17,7 @@ class RedditAPI {
   async getImages(): Promise<Wallpaper[]> {
     try {
       let wallpapers: Wallpaper[] = [];
-      const data = await get(`https://www.reddit.com/${this.subreddit}/top.json?t=all&after=${this.after}&limit=100`);
+      const data = await get(`https://www.reddit.com/${this.subreddit}/top.json?t=all&after=${this.after}&limit=100`, this.controller.signal);
       this.after = data.data.after;
       for (let listing of data.data.children) {
         const { post_hint, url, preview } = listing.data;

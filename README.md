@@ -1,7 +1,7 @@
 # Reddit Slideshow Wallpaper
 
 ## Build
-`npm run build` will transpile and move relevant files to `{Wallpaper Engine dir}/projects/myprojects/reddit_wallpaper`.
+`npm run build` will run webpack and move relevant files to `{Wallpaper Engine dir}/projects/myprojects/reddit_wallpaper`.
 
 ## Future features
 - [ ] User-set minimum resolution filter

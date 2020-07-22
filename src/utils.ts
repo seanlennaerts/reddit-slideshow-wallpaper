@@ -9,9 +9,9 @@ export function debounce(callback: Function, wait: number) {
 
 // wrapper for fetch to retry n times with incrementing delays
 // throws Error if n = 1
-export async function get(url: string, n = 4, wait = 1000) {
+export async function get(url: string, signal: AbortSignal, n = 4, wait = 1000,) {
   try {
-    const response = await fetch(url, { signal: this.controller.signal });
+    const response = await fetch(url, { signal });
     if (!response.ok) {
       throw new Error(response.status.toString());
     }
@@ -23,7 +23,7 @@ export async function get(url: string, n = 4, wait = 1000) {
       throw error;
     }
     setTimeout(async () => {
-      return await this.get(url, n - 1, wait * 2);
+      return await get(url, signal, n - 1, wait * 2,);
     }, wait)
   }
 }
